@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('mot_passe');
             $table->bigInteger('abonnement_id')->unsigned();
-            $table->foreign('abonnement_id')->references('id')->on('abonnement');
+            // $table->foreign('abonnement_id')->references('id')->on('abonnement');
             $table->timestamps();
         });
     }

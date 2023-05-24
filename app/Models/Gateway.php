@@ -10,7 +10,15 @@ class Gateway extends Model
     use HasFactory;
 
     protected $fillable = [
-        'code', 'libelle','host', 'mot_passe', 'parking_id'
+        'code', 
+        'libelle',
+        'host',
+        'ip',
+        'username',
+        'mot_passe', 
+        'config', 
+        'niveaux_id'
     ];
     protected $primaryKey = 'id';
+    protected $table = 'gateway';
 }

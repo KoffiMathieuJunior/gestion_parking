@@ -17,19 +17,26 @@ return new class extends Migration
             $table->id();
             $table->string('nom');
             $table->string('prenoms');
-            $table->string('password')->unique();
-            $table->string('contact')->unique();
-            $table->string('email')->unique();
+            // $table->dropColumn('password');
+            $table->string('login');
+            $table->string('password');
+            // $table->dropColumn('contact');
+            $table->string('contact');
+            // $table->dropColumn('email');
+            $table->string('email');
             $table->bigInteger('statut_id')->unsigned();
-            $table->foreign('statut_id')->references('id')->on('statut');
-            $table->bigInteger('proprietaire_id')->unsigned();
-            $table->foreign('proprietaire_id')->references('id')->on('proprietaire');
+            // $table->foreign('statut_id')->references('id')->on('statut');
+            // $table->bigInteger('proprietaire_id')->unsigned();
+            // $table->foreign('proprietaire_id')->references('id')->on('proprietaire');
             $table->bigInteger('type_user_id')->unsigned();
-            $table->foreign('type_user_id')->references('id')->on('type_user');
+            // $table->foreign('type_user_id')->references('id')->on('type_user');
             $table->string('image');
-            $table->string('sexe');
+            $table->enum('sexe', ['Homme', 'Femme']);
             $table->timestamps();
         });
+        // Schema::table('users', function(Blueprint $table){
+        //     $table->string('password');
+        // });
     }
 
     /**

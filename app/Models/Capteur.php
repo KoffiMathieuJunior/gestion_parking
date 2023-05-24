@@ -10,7 +10,7 @@ class Capteur extends Model
     use HasFactory;
 
     protected $fillable = [
-        'libelle', 'etat', 'statut_id', 'gateway_id'
+        'libelle', 'etat', 'statut_id', 'gateway_id', 'niveaux_id'
     ];
     protected $primaryKey = 'id';
 }

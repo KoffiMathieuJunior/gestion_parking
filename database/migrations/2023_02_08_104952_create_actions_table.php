@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('code');
             $table->string('libelle');
             $table->bigInteger('parent_id')->unsigned();
-            $table->foreign('parent_id')->references('id')->on('parent');
+            // $table->foreign('parent_id')->references('id')->on('parent');
             $table->timestamps();
         });
     }

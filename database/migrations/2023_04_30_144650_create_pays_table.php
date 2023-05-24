@@ -13,16 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('parkings', function (Blueprint $table) {
+        Schema::create('pays', function (Blueprint $table) {
             $table->id();
+            $table->string('code');
             $table->string('libelle');
-            $table->string('latitude');
-            $table->string('longitude');
-            $table->string('adresse');
-            $table->string('heure_ouverture');
-            $table->string('heure_fermeture');    
-            $table->bigInteger('compagnie_id')->unsigned();
-            $table->foreign('compagnie_id')->references('id')->on('compagnie');
+            $table->string('flags');
+            $table->string('indicatif');
+            $table->string('language');
+            $table->string('language_code');
             $table->timestamps();
         });
     }
@@ -34,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('parkings');
+        Schema::dropIfExists('pays');
     }
 };

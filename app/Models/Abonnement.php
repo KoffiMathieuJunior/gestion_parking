@@ -11,7 +11,14 @@ class Abonnement extends Model
     use HasFactory;
 
     protected $fillable = [
-        'code', 'date_abonnement', 'libelle'
+        'code', 
+        // 'date_abonnement', 
+        'libelle', 
+        'date_debut', 
+        'date_fin', 
+        'client_id', 
+        'place_stationnements_id', 
+        'statut', 
        
     ];
     protected $primaryKey = 'id';

@@ -10,7 +10,8 @@ class Place_Stationnement extends Model
     use HasFactory;
 
     protected $fillable = [
-        'libelle', 'etat', 'numero', 'type_vehicule_id', 'parking_id', 'capteur_id'
+        'libelle', 'espace', 'numero', 'type_vehicule_id', 'niveaux_id', 'capteur_id', 'abonnement_id', 'statut_id'
     ];
     protected $primaryKey = 'id';
+    protected $table = 'place_stationnements';
 }

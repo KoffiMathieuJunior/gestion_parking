@@ -181,10 +181,11 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
         /*
          * Package Service Providers...
          */
+        //  Laravel\Passport\PassportServiceProvider::class,
+        Laravel\Sanctum\SanctumServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -194,6 +195,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        
 
     ],
 
@@ -210,6 +212,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        'Passport' => Laravel\Passport\Facades\Passport::class,
     ])->toArray(),
 
 ];

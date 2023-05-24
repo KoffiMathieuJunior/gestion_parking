@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('abonnements', function (Blueprint $table) {
+        Schema::create('type_vehicules', function (Blueprint $table) {
             $table->id();
             $table->string('code');
-            $table->string('date_abonnement');
             $table->string('libelle');
             $table->timestamps();
         });
@@ -29,15 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-
-           Schema::create('abonnements', function (Blueprint $table) {
-            $table->id();
-            $table->string('code');
-            $table->string('date_abonnement');
-            $table->string('libelle');
-            $table->timestamps();
-        });
+        Schema::dropIfExists('type_vehicules');
     }
 };
-
-

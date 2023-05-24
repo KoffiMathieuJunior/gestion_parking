@@ -15,15 +15,15 @@ return new class extends Migration
     {
         Schema::create('vehicules', function (Blueprint $table) {
             $table->id();
-            $table->string('matricule');
+            $table->string('plaque_matricule');
             $table->string('couleur');
             $table->string('marque');
-            $table->string('model');
+            $table->string('modele');
             
             $table->bigInteger('type_vehicule_id')->unsigned();
-            $table->foreign('type_vehicule_id')->references('id')->on('type_vehicule');
-            $table->bigInteger('client_id')->unsigned();
-            $table->foreign('client_id')->references('id')->on('client');
+            // $table->foreign('type_vehicule_id')->references('id')->on('type_vehicule');
+            $table->bigInteger('client_id')->unsigned()->comment("client id correspond a l'id de l'utilisateur dont le type user est client");
+            // $table->foreign('client_id')->references('id')->on('client');
             $table->timestamps();
         });
     }

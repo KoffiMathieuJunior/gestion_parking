@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('role__actions', function (Blueprint $table) {
+        Schema::create('notification', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('role_id')->unsigned();
-            $table->foreign('role_id')->references('id')->on('role');
-            $table->bigInteger('action_id')->unsigned();
-            $table->foreign('action_id')->references('id')->on('action');
+            $table->bigInteger('user_id')->unsigned();
+            $table->string('libelle');
+            $table->longText('message');
+            $table->string('date');
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('role__actions');
+        Schema::dropIfExists('notification');
     }
 };

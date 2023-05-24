@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('date_inscription');
             $table->string('logo');
             $table->bigInteger('type_proprietaire_id')->unsigned();
-            $table->foreign('type_proprietaire_id')->references('id')->on('type_proprietaire');
+            // $table->foreign('type_proprietaire_id')->references('id')->on('type_proprietaire');
             $table->timestamps();
         });
     }

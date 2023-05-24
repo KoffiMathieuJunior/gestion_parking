@@ -13,4 +13,5 @@ class Type_Vehicule extends Model
         'code', 'libelle'
     ];
     protected $primaryKey = 'id';
+    protected $table = 'type_vehicules';
 }

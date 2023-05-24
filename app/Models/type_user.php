@@ -9,7 +9,7 @@ class type_user extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'code', 'nom', 'prenoms'
+        'code', 'libelle'
     ];
     protected $primaryKey = 'id';
 }

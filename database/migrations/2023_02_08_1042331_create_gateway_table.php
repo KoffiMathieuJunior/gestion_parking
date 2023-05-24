@@ -13,10 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('mode__paiements', function (Blueprint $table) {
+        Schema::create('gateway', function (Blueprint $table) {
             $table->id();
             $table->string('code');
             $table->string('libelle');
+            $table->string('host');
+            $table->string('ip');
+            $table->string('username');
+            $table->string('mot_passe');
+            $table->longText('config');
+            $table->bigInteger('niveaux_id')->unsigned();
+            // $table->foreign('parking_id')->references('id')->on('parking');
             $table->timestamps();
         });
     }
@@ -28,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mode__paiements');
+        Schema::dropIfExists('gateway');
     }
 };

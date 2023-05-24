@@ -16,7 +16,9 @@ return new class extends Migration
         Schema::create('niveaux', function (Blueprint $table) {
             $table->id();
             $table->string('code');
-            $table->Text('libelle');
+            $table->integer('numero');
+            $table->integer('parking_id')->unsigned();
+            $table->integer('capacite');
             $table->timestamps();
         });
     }

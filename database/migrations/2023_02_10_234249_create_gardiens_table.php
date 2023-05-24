@@ -19,10 +19,10 @@ return new class extends Migration
             $table->string('nom');
             $table->string('prenoms');  
             $table->bigInteger('parking_id')->unsigned();
-            $table->foreign('parking_id')->references('id')->on('parking');
+            // $table->foreign('parking_id')->references('id')->on('parking');
              
             $table->bigInteger('proprietaire_id')->unsigned();
-            $table->foreign('proprietaire_id')->references('id')->on('proprietaire');
+            // $table->foreign('proprietaire_id')->references('id')->on('proprietaire');
 
             $table->timestamps();
         });
