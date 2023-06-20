@@ -17,13 +17,14 @@ return new class extends Migration
             $table->id();
             $table->string('libelle');
             $table->integer('numero');
-            $table->geometry('espace')->nullable();
+            $table->json('espace')->nullable();
+            // $table->geometry('espace')->nullable();
             $table->bigInteger('type_vehicule_id')->unsigned();
             // $table->foreign('type_vehicule_id')->references('id')->on('type_vehicule');
             $table->bigInteger('niveaux_id')->unsigned();
-            $table->bigInteger('abonnement_id')->unsigned();
+            $table->integer('cout')->unsigned();
             // $table->foreign('parking_id')->references('id')->on('parking');
-            $table->bigInteger('capteur_id')->unsigned();
+            // $table->bigInteger('capteur_id')->unsigned();
             $table->bigInteger('statut_id')->unsigned();
             // $table->foreign('capteur_id')->references('id')->on('capteur');
             $table->timestamps();

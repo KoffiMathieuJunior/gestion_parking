@@ -32,18 +32,19 @@ use App\Http\Controllers\API\PlaceStationnementController;
 Route::fallback(function(){
     return response()->json(['message' => 'Service introuvable'], 404);
 });
-Route::post('register', [PassportAuthController::class, 'register']);
+// Route::post('register', [PassportAuthController::class, 'register']);
 Route::post('login', [PassportAuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    // Route::group('users', function(){
+    Route::prefix('users')->group(function(){
         // dd('check');
+        Route::post('register', [PassportAuthController::class, 'register']);
         Route::post('/logout', [UserController::class, 'logout']);
-        Route::get('/users', [UserController::class, 'getUsers']);
-        Route::post('/users', [UserController::class, 'createUser']);
+        Route::post('/get', [UserController::class, 'getUsers']);
+        Route::post('/create', [UserController::class, 'createUser']);
         Route::put('/users/{id}', [UserController::class, 'updateUser']);
         Route::delete('/users/{id}', [UserController::class, 'deleteUser']);
-    // });
+    });
 
     // Route::get('/users', [UserController::class, 'getUsers']);
     // Abonnement
@@ -61,6 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     // Type vehicule
     Route::prefix('type-vehicule')->group(function(){
+        // dd('ype-vehicule');
         Route::post('/get', [TypeVehiculeController::class, 'index']);
         Route::post('/create', [TypeVehiculeController::class, 'store']);
         Route::post('/update', [TypeVehiculeController::class, 'update']);
@@ -103,6 +105,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     // Parking
     Route::prefix('place_stationnement')->group(function(){
+        // dd('place_stationnement');
         Route::post('/get', [PlaceStationnementController::class, 'index']);
         Route::post('/create', [PlaceStationnementController::class, 'store']);
         Route::post('/update', [PlaceStationnementController::class, 'update']);

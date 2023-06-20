@@ -25,7 +25,28 @@ class PassportAuthController extends BaseController
     public function register(Request $request)
     {
         // dd($request);
+        $messages = [
+            'data.nom.required' => 'Le nom est requis.',
+            'data.prenoms.required' => 'Le prenoms est requis.',
+            'data.login.required' => 'Le login est requis',
+            'data.login.unique' => 'Ce login existe deja',
+            'data.contact.unique' => 'Le contact existe deja',
+            'data.password.required' => 'Ce champs est requis',
+            'data.password.min' => 'Ce champs doit comporter au moins 8 caractères',
+            'data.password.letters' => 'Ce champs doit comporter au moins une lettre',
+            'data.password.mixedCase' => 'Ce champs doit comporter au une lettre majuscule',
+            'data.password.symbols' => 'Ce champs doit comporter des caractères spéciaux',
+            'data.sexe.required' => 'Le sexe est requis.',
+            'data.image.required' => 'L\'image est requise.',
+            'data.type_user_id.required' => 'Le type user est requis.',
+            'data.type_user_id.integer' => 'Le type user doit être un entier.',
+            'data.type_user_id.exists' => 'Le type user sélectionné n\'est pas valide.',
+            'data.statut_id.required' => 'Le statut est requis.',
+            'data.statut_id.integer' => 'Le statut doit être un entier.',
+            'data.statut_id.exists' => 'Le statut sélectionné n\'est pas valide.',
+        ];
         // $validators = $this->validate($request, [
+            // $req = $request->all();
             $validators = Validator::make($request->all(), [
                 'nom' => 'required',
                 'prenoms' => 'required',
@@ -45,12 +66,12 @@ class PassportAuthController extends BaseController
                 // 'compagnie_id' => 'required',
                 // 'proprietaire_id' => 'required',
                 // 'type_user_id' => 'required',
-                'type_user_id' => 'required|integer|exists:App\Models\type_user,id',
+                'type_user_id' => 'required|exists:App\Models\Type_user,id',
                 // 'statut_id' => 'required',
-                'statut_id' => 'required|integer|exists:App\Models\Statut,id',
+                'statut_id' => 'required|exists:App\Models\Statut,id',
                 'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
                 'sexe' => 'required|in:Femme,Homme',
-            ]);
+            ], $messages);
         // dd($validators->fails());
         $token = '';
         if(!$validators->fails()){
@@ -61,7 +82,7 @@ class PassportAuthController extends BaseController
             $input['password'] = Hash::make($input['password']);
             $user = User::create($input);
             // dd($user);
-            // $validatedData['image'] = $request->file('image')->storeAs('user_photo', date("d/m/Y H:i:s").'-'.$user->id.'-'.$request->image->getClientOriginalName());
+            $validatedData['image'] = $request->file('image')->storeAs('user_photo', date("d/m/Y H:i:s").'-'.$user->id.'-'.$request->image->getClientOriginalName());
             $success['token'] = $user->createToken('users')->plainTextToken;
             // Envoyer un email à l'utilisateur avec le jeton d'authentification
             // Mail::to($user->email)->send(new BienvenueMail($accessToken));
@@ -104,7 +125,7 @@ class PassportAuthController extends BaseController
         $user = User::where('email', $request->email)->first();
         // dd($user);
         // 
-        $credentials = request(['email', 'password']);
+        // $credentials = request(['email', 'password']);
         // dd(Auth::attempt(['email' => $request->email, 'password' => $request->password]));
         // if (!Auth::attempt($credentials)) {
         //     return response()->json([
@@ -112,19 +133,24 @@ class PassportAuthController extends BaseController
         //     ], 401);
         // }
         // if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
-        if(Hash::check($request->password, $user->password)){  
-            Auth::login($user);
-            // $user = Auth::user(); 
-            $success['token'] = $user->createToken('users')->plainTextToken; 
-            $success['data'] = $user;
-            // $request->session()->regenerate();
-            return $this->sendResponse($success, 'Opération effectuée avec succès.');
-        } 
-        else{ 
-            // $errors = new MessageBag();
-            // dd($errors->all ());
-            return $this->sendError('Unauthorised.', ['error'=>'Utilisateur inexistant']);
-        } 
+        if($user){
+            if(Hash::check($request->password, $user->password)){  
+                // dd($user);
+                Auth::login($user);
+                // $user = Auth::user(); 
+                $success['token'] = $user->createToken('users')->plainTextToken; 
+                $success['data'] = $user;
+                // $request->session()->regenerate();
+                return $this->sendResponse($success, 'Opération effectuée avec succès.');
+            } 
+            else{ 
+                // $errors = new MessageBag();
+                // dd($errors->all ());
+                return $this->sendError('Unauthorised.', ['error'=>'Login/mot de passe incorrecte !']);
+            } 
+        } else {
+            return $this->sendError('Unauthorised.', ['error'=>'Ce compte n\'est inexistant']);
+        }
     }
 
     /* 

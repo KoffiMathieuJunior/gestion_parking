@@ -19,15 +19,32 @@ class VillesController extends BaseController
     {
         //
         $req = $request->all();
-          // return Statut::where('libelle','like','%'.$req['data']['libelle'].'%')
-        // ->orderBy('name')
-        // ->take(10)
-        // ->get();
-        $data = Ville::paginate($req['size']);
-        if(!$data->isEmpty()){
-            return $this->sendResponse($data, 'Opération effectuée avec succès.');
+        // dd($req);
+        $query = Ville::join('pays', 'ville.pays_id', '=', 'pays.id')
+            ->select('ville.id as id', 'ville.libelle as libelle', 'pays.libelle as pays_libelle', 'language', 'indicatif');
+        
+        if($request->has('data')){
+            if ($request->has('data.pays_id')) {
+                $query->where('pays_id', $req['data']['pays_id']);
+            }
+
+            if ($request->has('data.libelle')) {
+                $query->where('libelle', 'LIKE', '%' . $req['data']['libelle'] . '%');
+            }
+
+            if(isset($req['size'])){
+                $results = $query->paginate($req['size']);
+            } else {
+                $results = $query->get();
+            }
+            // $data = Statut::paginate($req['size'] ? $req['size'] : 0);
+            if(!$results->isEmpty()){
+                return $this->sendResponse($results, 'Opération effectuée avec succès.');
+            } else {
+                return $this->sendResponse([], 'Aucune donnée trouver');
+            }
         } else {
-            return $this->sendResponse([], 'Aucune donnée trouver');
+            return $this->sendError('Format incorrect: data inexistant', 'Opération échouée');
         }
     }
 

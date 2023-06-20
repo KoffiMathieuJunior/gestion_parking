@@ -18,17 +18,49 @@ class PaysController extends BaseController
     public function index(Request $request)
     {
         //
+        $query = Pays::query();
         $req = $request->all();
         // return Statut::where('libelle','like','%'.$req['data']['libelle'].'%')
       // ->orderBy('name')
       // ->take(10)
       // ->get();
-      $data = Pays::paginate($req['size']);
-      if(!$data->isEmpty()){
-          return $this->sendResponse($data, 'Opération effectuée avec succès.');
-      } else {
-          return $this->sendResponse([], 'Aucune donnée trouvée');
-      }
+      if($request->has('data')){
+            if ($request->has('data.code')) {
+                $query->where('code', 'LIKE', '%' . $req['data']['code'] . '%');
+            }
+            
+            if ($request->has('data.libelle')) {
+                $query->where('libelle', 'LIKE', '%' . $req['data']['libelle'] . '%');
+            }
+
+            if ($request->has('data.flags')) {
+                $query->where('flags', 'LIKE', '%' . $req['data']['flags'] . '%');
+            }
+
+            if ($request->has('data.indicatif')) {
+                $query->where('indicatif', 'LIKE', '%' . $req['data']['indicatif'] . '%');
+            }
+            
+            if ($request->has('data.language_code')) {
+                $query->where('language_code', 'LIKE', '%' . $req['data']['language_code'] . '%');
+            }
+            
+            if ($request->has('data.language')) {
+                $query->where('language', 'LIKE', '%' . $req['data']['language'] . '%');
+            }
+            if($request->has('size')){
+                $results = $query->paginate($request['size']);
+            } else {
+                $results = $query->get();
+            }
+            if(!$results->isEmpty()){
+                return $this->sendResponse($results, 'Opération effectuée avec succès.');
+            } else {
+                return $this->sendResponse([], 'Aucune donnée trouvée');
+            }
+        } else {
+            return $this->sendError('Format incorrect: data inexistant', 'Opération échouée');
+        }
     }
 
     /**
@@ -115,7 +147,7 @@ class PaysController extends BaseController
         $req = $request->all();
         $validator = Validator::make($req, [
             'data' => 'required|array',
-            'data.id' => 'required|string',
+            'data.id' => 'required',
             'data.code' => 'required|string',
             'data.libelle' => 'required|string',
             'data.flags' => 'required|string',
@@ -130,6 +162,7 @@ class PaysController extends BaseController
             $data->code = $req['data']['code'];
             $data->libelle = $req['data']['libelle'];
             $data->flags = $req['data']['flags'];
+            $data->indicatif = $req['data']['indicatif'];
             $data->language = $req['data']['language'];
             $data->language_code = $req['data']['language_code'];
             $data->update();
@@ -150,6 +183,7 @@ class PaysController extends BaseController
     {
         //
         $req = $request->all();
+        // dd($req);
         $data = Pays::findOrFail($req['data']['id']);
         if(!$data->fails()){
             $data->delete();

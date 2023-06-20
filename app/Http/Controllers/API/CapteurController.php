@@ -31,15 +31,15 @@ class CapteurController extends BaseController
             }
 
             if ($request->has('data.niveaux_id')) {
-                $query->where('niveaux_id', '=', $req['data']['niveaux_id']);
+                $query->where('niveaux_id', $req['data']['niveaux_id']);
             }
 
             if ($request->has('data.statut_id')) {
-                $query->where('statut_id', '=', $req['data']['statut_id']);
+                $query->where('statut_id',  $req['data']['statut_id']);
             }
 
             if ($request->has('data.gateway_id')) {
-                $query->where('gateway_id', '=', $req['data']['gateway_id']);
+                $query->where('gateway_id', $req['data']['gateway_id']);
             }
 
             $results = $query->paginate($request['size']);

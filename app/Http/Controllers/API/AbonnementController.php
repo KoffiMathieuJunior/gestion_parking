@@ -20,16 +20,54 @@ class AbonnementController extends BaseController
        
         // $abonnement = Abonnement::paginate(10);
         $req = $request->all();
-        // return Statut::where('libelle','like','%'.$req['data']['libelle'].'%')
-        // ->orderBy('name')
-        // ->take(10)
-        // ->get();
-        $data = Abonnement::paginate($req['size']);
-        if(!$data->isEmpty()){
-            return $this->sendResponse($data, 'Opération effectuée avec succès.');
+        $query = Abonnement::join('users', 'client_id', '=', 'users.id')
+                            ->select('abonnements.id as id', 'abonnements.libelle as libelle', 'abonnements.code as code', 'date_debut', 'date_fin');
+        if($request->has('data')){
+            if ($request->has('data.client_id')) {
+                $query->where('client_id',  $req['data']['client_id']);
+            }
+            
+            if ($request->has('data.place_stationnements_id')) {
+                $query->where('place_stationnements_id', $req['data']['place_stationnements_id']);
+            }
+
+            if ($request->has('data.libelle')) {
+                $query->where('libelle', 'LIKE', '%' . $req['data']['libelle'] . '%');
+            }
+
+            if ($request->has('data.date_debut')) {
+                $query->where('date_debut', 'LIKE', '%' . $req['data']['date_debut'] . '%');
+            }
+
+            if ($request->has('data.date_fin')) {
+                $query->where('date_fin', 'LIKE', '%' . $req['data']['date_fin'] . '%');
+            }
+
+            if ($request->has('data.code')) {
+                $query->where('code', 'LIKE', '%' . $req['data']['code'] . '%');
+            }
+
+            if(isset($req['size'])){
+                $results = $query->paginate($req['size']);
+            } else {
+                $results = $query->get();
+            }
+            // $data = Statut::paginate($req['size'] ? $req['size'] : 0);
+            if(!$results->isEmpty()){
+                return $this->sendResponse($results, 'Opération effectuée avec succès.');
+            } else {
+                return $this->sendResponse([], 'Aucune donnée trouver');
+            }
         } else {
-            return $this->sendResponse([], 'Aucune donnée trouver');
+            return $this->sendError('Format incorrect: data inexistant', 'Opération échouée');
         }
+        // $req = $request->all();
+        // $data = Abonnement::paginate($req['size']);
+        // if(!$data->isEmpty()){
+        //     return $this->sendResponse($data, 'Opération effectuée avec succès.');
+        // } else {
+        //     return $this->sendResponse([], 'Aucune donnée trouver');
+        // }
     }
 
     /**

@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
@@ -49,6 +51,14 @@ class Handler extends ExceptionHandler
     }
 
 
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        if ($request->expectsJson()) {
+            return response()->json(['error' => 'Unauthenticated. Please login.'], 401);
+        }
+
+        return redirect()->guest(route('login'));
+    }
     // protected function unauthenticated($request, AuthenticationException $exception){
     //     if ($request->expectsJson()) {
     //         return response()->json(['message' => 'Unauthorized'], 401);
@@ -56,4 +66,13 @@ class Handler extends ExceptionHandler
 
     //     return redirect()->guest(route('login'))->with('message', 'Vous devez vous connecter pour accéder à cette page.');
     // }
+
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof TokenMismatchException) {
+            return response()->json(['message' => 'Invalid token. Please authenticate.'], 401);
+        }
+
+        return parent::render($request, $exception);
+    }
 }

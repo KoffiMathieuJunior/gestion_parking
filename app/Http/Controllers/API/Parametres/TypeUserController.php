@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API\Parametres;
 
-use App\Models\Type_User;
+use App\Models\type_user;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -19,16 +19,36 @@ class TypeUserController extends BaseController
     {
         //
         $req = $request->all();
-         // return Type_User::where('libelle','like','%'.$req['data']['libelle'].'%')
-        // ->orderBy('name')
-        // ->take(10)
-        // ->get();
-        $data = Type_User::paginate($req['size']);
-        if(!$data->isEmpty()){
-            return $this->sendResponse($data, 'Opération effectuée avec succès.');
+        $query = type_user::query();
+        if($request->has('data')){
+            if ($request->has('data.code')) {
+                $query->where('code', 'LIKE', '%' . $req['data']['code'] . '%');
+            }
+            if ($request->has('data.libelle')) {
+                $query->where('libelle', 'LIKE', '%' . $req['data']['libelle'] . '%');
+            }
+
+            if(isset($req['size'])){
+            
+                $results = $query->paginate($req['size']);
+            } else {
+                $results = $query->get();
+            }
+            // $data = Statut::paginate($req['size'] ? $req['size'] : 0);
+            if(!$results->isEmpty()){
+                return $this->sendResponse($results, 'Opération effectuée avec succès.');
+            } else {
+                return $this->sendResponse([], 'Aucune donnée trouver');
+            }
         } else {
-            return $this->sendResponse([], 'Aucune donnée trouver');
+            return $this->sendError('Format incorrect: data inexistant', 'Opération échouée');
         }
+        // $data = type_user::paginate($req['size'] ? $req['size'] : 0);
+        // if(!$data->isEmpty()){
+        //     return $this->sendResponse($data, 'Opération effectuée avec succès.');
+        // } else {
+        //     return $this->sendResponse([], 'Aucune donnée trouver');
+        // }
     }
 
     /**
@@ -50,7 +70,7 @@ class TypeUserController extends BaseController
         ]);
         // dd($validator->passes());
         if($validator->passes()){
-            $type_user = new Type_User([
+            $type_user = new type_user([
                 'code' => $req['data']['code'],
                 'libelle' => $req['data']['libelle'],
             ]);
@@ -92,7 +112,7 @@ class TypeUserController extends BaseController
         ]);
         // dd($req);
         if($validator->passes()){
-            $type_user = Type_User::findOrFail($req['data']['id']);
+            $type_user = type_user::findOrFail($req['data']['id']);
             $type_user->id = $req['data']['id'];
             $type_user->code = $req['data']['code'];
             $type_user->libelle = $req['data']['libelle'];
@@ -115,7 +135,7 @@ class TypeUserController extends BaseController
     {
         //
         $req = $request->all();
-        $data = Type_User::findOrFail($req['data']['id']);
+        $data = type_user::findOrFail($req['data']['id']);
         if(!$data->fails()){
             $data->delete();
             return $this->sendResponse($data, 'Opération effectuée avec succès.');

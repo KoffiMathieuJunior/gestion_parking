@@ -33,8 +33,8 @@ class UserController extends BaseController
             // $query = $request->input('query');
             $query = User::join('statuts', 'users.statut_id', '=', 'statuts.id')
                 ->join('type_users', 'users.type_user_id', '=', 'type_users.id')
-                ->select('users.id as id', 'nom', 'prenoms', 'login', 'contact', 'email',
-                  'statut_id', 'type_user_id', 'statuts.libelle as statut_libelle', 'type_users.id as type_user_libelle');
+                ->select('users.id as id', 'nom', 'prenoms', 'login', 'contact', 'email', 'sexe',
+                  'statut_id', 'type_user_id', 'statuts.libelle as statut_libelle', 'type_users.libelle as type_user_libelle');
             $req = $request->all();
             if($request->has('data')){
                 if ($request->has('data.nom')) {
@@ -70,13 +70,18 @@ class UserController extends BaseController
                 }
 
                 if ($request->has('data.sexe')) {
-                    $query->where('sexe', '=', $req['data']['sexe']);
+                    $query->where('sexe', '&', $req['data']['sexe']. '%');
                 }
 
                 foreach ($query as $user) {
                     $user->image_url = Storage::url($user->image_path);
                 }
-                $results = $query->paginate(10);
+                // $results = $query->paginate(10);
+                if(isset($req['size'])){
+                    $results = $query->paginate($req['size']);
+                } else {
+                    $results = $query->get();
+                }
                 foreach ($query as $user) {
                     $user->image = '/path/to/image/' . $user->image; // Remplacer le chemin par le chemin réel de l'image
                 }

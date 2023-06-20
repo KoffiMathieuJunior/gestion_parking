@@ -20,8 +20,10 @@ class GatewayController extends BaseController
     public function index(Request $request)
     {
         //
-        $query = Gateway::query();
         $req = $request->all();
+        $query = Gateway::join('niveaux', 'niveaux_id', '=', 'niveaux.id')
+                          ->select('gateway.id as id', 'gateway.code as code', 'libelle', 'host', 'ip', 'config', 'username', 'mot_passe', 'niveaux_id',
+                                 'niveaux.code as niveau_code', 'niveaux.numero as niveaux_numero');
         // dd($request->has('data'));
         if($request->has('data')){
             if ($request->has('data.libelle')) {
@@ -49,14 +51,18 @@ class GatewayController extends BaseController
             }
 
             if ($request->has('data.niveaux_id')) {
-                $query->where('niveaux_id', '=', $req['data']['niveaux_id']);
+                $query->where('niveaux_id', $req['data']['niveaux_id']);
             }
 
             if ($request->has('data.config')) {
                 $query->where('config', 'LIKE', '%' . $req['data']['config'] . '%');
             }
 
-            $results = $query->paginate($request['size']);
+            if(isset($req['size'])){
+                $results = $query->paginate($req['size']);
+            } else {
+                $results = $query->get();
+            }
             // dd($request);
             // unset($results['mot_passe']);
             if(!$results->isEmpty()){
@@ -127,7 +133,8 @@ class GatewayController extends BaseController
                 'ip' => $req['data']['ip'],
                 'config' => $req['data']['config'],
                 'username' => $req['data']['username'],
-                'mot_passe' => Hash::make($req['data']['mot_passe']),
+                'mot_passe' => $req['data']['mot_passe'],
+                // 'mot_passe' => Hash::make($req['data']['mot_passe']),
                 'niveaux_id' => $req['data']['niveaux_id'],
             ]);
             
@@ -185,10 +192,10 @@ class GatewayController extends BaseController
             'data' => 'required|array',
             'data.id' => 'required',
             'data.code' => 'string',
-            'data.libelle' => 'integer',
+            'data.libelle' => 'string',
             'data.host' => 'string',
             'data.ip' => 'ip',
-            'data.username' => 'string|unique:gateway,username',
+            'data.username' => 'string',
             'data.mot_passe' => [
                 // 'confirmed', 
                 Password::min(8),
@@ -220,7 +227,8 @@ class GatewayController extends BaseController
                 $data->username = $req['data']['username'];
             }
             if ($request->has('data.mot_passe')) {
-                $data->mot_passe = Hash::make($req['data']['mot_passe']);
+                $data->mot_passe = $req['data']['mot_passe'];
+                // $data->mot_passe = Hash::make($req['data']['mot_passe']);
             }
             if ($request->has('data.config')) {
                 $data->config = $req['data']['config'];

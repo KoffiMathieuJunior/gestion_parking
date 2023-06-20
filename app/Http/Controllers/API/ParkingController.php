@@ -18,10 +18,13 @@ class ParkingController extends BaseController
     public function index(Request $request)
     {
         //
-        //  $req = $request->all();
-        //  $data = Parking::paginate($req['size']);
+        // $req = $request->all();
+        // $data = Parking::paginate($req['size']);
         // $users = Parking::query();
-        $query = Parking::query();
+        $query = Parking::join('ville', 'parkings.ville_id', '=', 'ville.id')
+        ->join('users', 'parkings.proprietaire_id', '=', 'users.id')
+        ->select('parkings.id as id', 'parkings.libelle as libelle', 'ville.libelle as ville_libelle', 'nom', 'prenoms', 'adresse',
+                'latitude', 'longitude', 'jours', 'heure_ouverture', 'heure_fermeture', 'capacite_total', 'proprietaire_id', 'ville_id');
         $req = $request->all();
         // dd($request->has('data'));
         if($request->has('data')){
@@ -42,11 +45,11 @@ class ParkingController extends BaseController
             }
 
             if ($request->has('data.ville_id')) {
-                $query->where('ville_id', '=', $req['data']['ville_id']);
+                $query->where('ville_id', $req['data']['ville_id']);
             }
 
             if ($request->has('data.proprietaire_id')) {
-                $query->where('proprietaire_id', '=', $req['data']['proprietaire_id']);
+                $query->where('proprietaire_id', $req['data']['proprietaire_id']);
             }
             // dd($request->has('data'));
             if ($request->has('data.jours')) {
@@ -61,11 +64,15 @@ class ParkingController extends BaseController
                 $query->where('heure_fermeture', 'LIKE', '%' . $req['data']['heure_fermeture'] . '%');
             }
 
-            if ($request->has('data.heure_fermeture')) {
-                $query->where('heure_fermeture', 'LIKE', '%' . $req['data']['heure_fermeture'] . '%');
+            if ($request->has('data.capacite_total')) {
+                $query->where('capacite_total', 'LIKE', '%' . $req['data']['capacite_total'] . '%');
             }
 
-            $results = $query->paginate($request['size']);
+            if(isset($req['size'])){
+                $results = $query->paginate($req['size']);
+            } else {
+                $results = $query->get();
+            }
             if(!$results->isEmpty()){
                 return $this->sendResponse($results, 'Opération effectuée avec succès.');
             } else {
@@ -115,8 +122,8 @@ class ParkingController extends BaseController
             'data.jours' => ['required','string', 'regex:/^(\b(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\b,?)+$/'],
             'data.latitude' => ['required','regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
             'data.longitude' => ['required','regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/'],
-            'data.heure_ouverture' => 'required|date_format:H:i',
-            'data.heure_fermeture' => 'required|date_format:H:i',
+            'data.heure_ouverture' => 'required|date_format:H:i:s',
+            'data.heure_fermeture' => 'required|date_format:H:i:s|after:heure_ouverture',
             'data.capacite_total' => 'required|integer',
             'data.ville_id' => 'required|integer|exists:App\Models\Ville,id',
             'data.proprietaire_id' => 'required|integer|exists:App\Models\User,id',
@@ -195,8 +202,8 @@ class ParkingController extends BaseController
             'data.jours' => ['string', 'regex:/^(\b(lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\b,?)+$/'],
             'data.latitude' => ['regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
             'data.longitude' => ['regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/'],
-            'data.heure_ouverture' => 'date_format:H:i',
-            'data.heure_fermeture' => 'date_format:H:i',
+            'data.heure_ouverture' => 'date_format:H:i:s',
+            'data.heure_fermeture' => 'date_format:H:i:s',
             'data.capacite_total' => 'integer',
             'data.ville_id' => 'integer|exists:App\Models\Ville,id',
             'data.proprietaire_id' => 'integer|exists:App\Models\type_user,id',

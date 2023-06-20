@@ -19,16 +19,41 @@ class NiveauxController extends BaseController
     public function index(Request $request)
     {
         //
-         $req = $request->all();
-          // return Statut::where('libelle','like','%'.$req['data']['libelle'].'%')
-        // ->orderBy('name')
-        // ->take(10)
-        // ->get();
-        $data = Niveau::paginate($req['size']);
-        if(!$data->isEmpty()){
-            return $this->sendResponse($data, 'Opération effectuée avec succès.');
+        $req = $request->all();
+        $query = Niveau::join('parkings', 'parking_id', '=', 'parkings.id')
+                        ->join('ville', 'parkings.ville_id', '=', 'ville.id')
+                         ->select('niveaux.id as id', 'code', 'numero', 'capacite', 'parkings.libelle as parking_libelle', 'adresse',
+                                 'parking_id', 'ville.libelle as ville_libelle');
+        if($request->has('data')){
+            if ($request->has('data.code')) {
+                $query->where('code', 'LIKE', '%' . $req['data']['code'] . '%');
+            }
+            
+            if ($request->has('data.numero')) {
+                $query->where('numero', 'LIKE', '%' . $req['data']['numero'] . '%');
+            }
+
+            if ($request->has('data.capacite')) {
+                $query->where('capacite', 'LIKE', '%' . $req['data']['capacite'] . '%');
+            }
+            // dd($req['data']['parking_id']);
+            if ($request->has('data.parking_id')) {
+                $query->where('parking_id', $req['data']['parking_id']);
+            }
+
+            if(isset($req['size'])){
+                $results = $query->paginate($req['size']);
+            } else {
+                $results = $query->get();
+            }
+            // $data = Statut::paginate($req['size'] ? $req['size'] : 0);
+            if(!$results->isEmpty()){
+                return $this->sendResponse($results, 'Opération effectuée avec succès.');
+            } else {
+                return $this->sendResponse([], 'Aucune donnée trouver');
+            }
         } else {
-            return $this->sendResponse([], 'Aucune donnée trouver');
+            return $this->sendError('Format incorrect: data inexistant', 'Opération échouée');
         }
     }
 
@@ -116,7 +141,9 @@ class NiveauxController extends BaseController
             $data = Niveau::findOrFail($req['data']['id']);
             $data->id = $req['data']['id'];
             $data->code = $req['data']['code'];
-            $data->libelle = $req['data']['libelle'];
+            $data->numero = $req['data']['numero'];
+            $data->capacite = $req['data']['capacite'];
+            $data->parking_id = $req['data']['parking_id'];
             $data->update();
             $data->save();
             return $this->sendResponse($data, 'Opération effectuée avec succès.');

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Bienvenue sur notre application</title>
+    <title>Bienvenue sur parking service</title>
 </head>
 <body>
     <h1>Bienvenue sur notre application</h1>

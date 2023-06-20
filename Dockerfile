@@ -49,6 +49,7 @@ RUN mkdir /app
 RUN mkdir -p  /app
 WORKDIR /app
 COPY . .
+COPY .env.prod .env
 COPY --from=base /var/www/html/vendor /app/vendor
 
 # Use yarn or npm depending on what type of
