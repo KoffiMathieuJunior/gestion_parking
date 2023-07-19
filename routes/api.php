@@ -7,15 +7,19 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AbonnementController;
 use App\Http\Controllers\API\CapteurController;
 use App\Http\Controllers\API\GatewayController;
-use App\Http\Controllers\API\Parametres\NiveauxController;
+use App\Http\Controllers\API\ParkingController;
+use App\Http\Controllers\API\PassportAuthController;
+use App\Http\Controllers\API\ReservationsController;
 use App\Http\Controllers\API\Parametres\PaysController;
 use App\Http\Controllers\API\Parametres\StatutController;
-use App\Http\Controllers\API\PassportAuthController;
-use App\Http\Controllers\API\Parametres\TypeUserController;
-use App\Http\Controllers\API\Parametres\TypeVehiculeController;
 use App\Http\Controllers\API\Parametres\VillesController;
-use App\Http\Controllers\API\ParkingController;
+use App\Http\Controllers\API\Parametres\FormuleController;
+use App\Http\Controllers\API\Parametres\NiveauxController;
 use App\Http\Controllers\API\PlaceStationnementController;
+use App\Http\Controllers\API\Parametres\TypeUserController;
+use App\Http\Controllers\API\Parametres\ModePaiementController;
+use App\Http\Controllers\API\Parametres\TypeVehiculeController;
+use App\Http\Controllers\API\Parametres\TypeAbonnementController;
 
 // use App\Models\Type_user;
 
@@ -68,6 +72,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/update', [TypeVehiculeController::class, 'update']);
         Route::post('/delete', [TypeVehiculeController::class, 'destroy']);
     });
+    // Type Abonnement
+    Route::prefix('type-abonnement')->group(function(){
+        // dd('ype-vehicule');
+        Route::post('/get', [TypeAbonnementController::class, 'index']);
+        Route::post('/create', [TypeAbonnementController::class, 'store']);
+        Route::post('/update', [TypeAbonnementController::class, 'update']);
+        Route::post('/delete', [TypeAbonnementController::class, 'destroy']);
+    });
     // Statut
     Route::prefix('statut')->group(function(){
         Route::post('/get', [StatutController::class, 'index']);
@@ -119,11 +131,33 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/delete', [GatewayController::class, 'destroy']);
     });
     // Capteur
-    Route::prefix('capteur')->group(function(){
+    Route::prefix('capteurs')->group(function(){
         Route::post('/get', [CapteurController::class, 'index']);
         Route::post('/create', [CapteurController::class, 'store']);
         Route::post('/update', [CapteurController::class, 'update']);
         Route::post('/delete', [CapteurController::class, 'destroy']);
+    });
+    // Mode paaiement
+    Route::prefix('mode-paiement')->group(function(){
+        Route::post('/get', [ModePaiementController::class, 'index']);
+        Route::post('/create', [ModePaiementController::class, 'store']);
+        Route::post('/update', [ModePaiementController::class, 'update']);
+        Route::post('/delete', [ModePaiementController::class, 'destroy']);
+    });
+    // Mode paaiement
+    Route::prefix('formule')->group(function(){
+        Route::post('/get', [FormuleController::class, 'index']);
+        Route::post('/create', [FormuleController::class, 'store']);
+        Route::post('/update', [FormuleController::class, 'update']);
+        Route::post('/delete', [FormuleController::class, 'destroy']);
+    });
+    // Mode paaiement
+    Route::prefix('reservation')->group(function(){
+        // dd('merci');
+        Route::post('/get', [ReservationsController::class, 'index']);
+        Route::post('/create', [ReservationsController::class, 'store']);
+        Route::post('/update', [ReservationsController::class, 'update']);
+        Route::post('/delete', [ReservationsController::class, 'destroy']);
     });
 
 

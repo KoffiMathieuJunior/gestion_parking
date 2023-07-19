@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('libelle');
             $table->bigInteger('client_id')->unsigned();
             $table->bigInteger('place_stationnements_id')->unsigned();
+            $table->bigInteger('type_abonnement_id')->unsigned();
             $table->string('date_debut');
             $table->string('date_fin');
             $table->bigInteger('statut_id')->unsigned();

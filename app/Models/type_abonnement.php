@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Capteur extends Model
+class type_abonnement extends Model
 {
     use HasFactory;
-
     protected $fillable = [
-        'libelle', 'etat', 'statut_id', 'gateway_id', 'place_id'
+        'code', 'libelle'
     ];
     protected $primaryKey = 'id';
 }

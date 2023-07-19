@@ -18,6 +18,7 @@ class Abonnement extends Model
         'date_fin', 
         'client_id', 
         'place_stationnements_id', 
+        'type_abonnement_id', 
         'statut', 
        
     ];

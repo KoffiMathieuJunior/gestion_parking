@@ -13,4 +13,5 @@ class Mode_Paiement extends Model
         'code', 'libelle'
     ];
     protected $primaryKey = 'id';
+    protected $table = 'mode_paiements';
 }

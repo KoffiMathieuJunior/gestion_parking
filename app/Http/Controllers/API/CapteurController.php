@@ -18,31 +18,43 @@ class CapteurController extends BaseController
     public function index(Request $request)
     {
         //
-        $query = Capteur::query();
+        // dd($request);
         $req = $request->all();
+        $query = Capteur::join('place_stationnements', 'place_id', '=', 'place_stationnements.id')
+                          ->join('statuts', 'capteurs.statut_id', '=', 'statuts.id')
+                          ->join('gateway', 'gateway_id', '=', 'gateway.id')
+                          ->select('capteurs.id as id', 'capteurs.libelle as libelle', 'etat', 
+                                    'place_stationnements.id as place_id', 'capteurs.statut_id as statut_id', 
+                                    'statuts.libelle as statut_libelle', 'gateway_id', 'gateway.libelle as gateway_libelle', 
+                                    'place_stationnements.libelle as place_libelle');
         // dd($request->has('data'));
         if($request->has('data')){
             if ($request->has('data.libelle')) {
-                $query->where('libelle', 'LIKE', '%' . $req['data']['libelle'] . '%');
+                $query->where('capteurs.libelle', 'LIKE', '%' . $req['data']['libelle'] . '%');
             }
             
             if ($request->has('data.etat')) {
                 $query->where('etat', 'LIKE', '%' . $req['data']['etat'] . '%');
             }
 
-            if ($request->has('data.niveaux_id')) {
-                $query->where('niveaux_id', $req['data']['niveaux_id']);
+            if ($request->has('data.place_id')) {
+                $query->where('capteurs.place_id', $req['data']['place_id']);
             }
 
             if ($request->has('data.statut_id')) {
-                $query->where('statut_id',  $req['data']['statut_id']);
+                $query->where('capteurs.statut_id',  $req['data']['statut_id']);
             }
 
             if ($request->has('data.gateway_id')) {
-                $query->where('gateway_id', $req['data']['gateway_id']);
+                $query->where('capteurs.gateway_id', $req['data']['gateway_id']);
             }
 
-            $results = $query->paginate($request['size']);
+            if(isset($req['size'])){
+                $results = $query->paginate($req['size']);
+            } else {
+                $results = $query->get();
+            }
+
             if(!$results->isEmpty()){
                 return $this->sendResponse($results, 'Opération effectuée avec succès.');
             } else {
@@ -65,9 +77,9 @@ class CapteurController extends BaseController
         $messages = [
             'data.libelle.required' => 'Ce champs est requis.',
             'data.etat.required' => 'Ce champs est requise.',
-            'data.niveaux_id.required' => 'Le niveau indiqué n\'est pas valide.',
-            'data.niveaux_id.integer' => 'Le niveau doit être un entier.',
-            'data.niveaux_id.exists' => 'Le niveau sélectionné n\'est pas valide.',
+            'data.place_id.required' => 'La place indiqué n\'est pas valide.',
+            'data.place_id.integer' => 'La place doit être un entier.',
+            'data.place_id.exists' => 'La place sélectionné n\'est pas valide.',
             'data.statut_id.required' => 'Le statut indiqué n\'est pas valide.',
             'data.statut_id.integer' => 'Le statut doit être un entier.',
             'data.statut_id.exists' => 'Le statut sélectionné n\'est pas valide.',
@@ -81,7 +93,7 @@ class CapteurController extends BaseController
             'data' => 'required|array',
             'data.etat' => 'required|string',
             'data.libelle' => 'required|string',
-            'data.niveaux_id' => 'required|integer|exists:App\Models\Niveau,id',
+            'data.place_id' => 'required|integer|exists:App\Models\Place_Stationnement,id',
             'data.statut_id' => 'required|integer|exists:App\Models\Statut,id',
             'data.gateway_id' => 'required|integer|exists:App\Models\Gateway,id',
         ], $messages);
@@ -91,7 +103,7 @@ class CapteurController extends BaseController
             $data = new Capteur([
                 'etat' => $req['data']['etat'],
                 'libelle' => $req['data']['libelle'],
-                'niveaux_id' => $req['data']['niveaux_id'],
+                'place_id' => $req['data']['place_id'],
                 'statut_id' => $req['data']['statut_id'],
                 'gateway_id' => $req['data']['gateway_id'],
             ]);
@@ -132,7 +144,7 @@ class CapteurController extends BaseController
             'data.id' => 'required',
             'data.libelle' => 'string',
             'data.etat' => 'string',
-            'data.niveaux_id' => 'integer|exists:App\Models\Niveau,id',
+            'data.place_id' => 'integer|exists:App\Models\Place_Stationnement,id',
             'data.statut_id' => 'integer|exists:App\Models\Statut,id',
             'data.gateway_id' => 'integer|exists:App\Models\Gateway,id',
         ]);
@@ -151,8 +163,8 @@ class CapteurController extends BaseController
             if ($request->has('data.etat')) {
                 $data->etat = $req['data']['etat'];
             }
-            if ($request->has('data.niveaux_id')) {
-                $data->niveaux_id = $req['data']['niveaux_id'];
+            if ($request->has('data.place_id')) {
+                $data->place_id = $req['data']['place_id'];
             }
             if ($request->has('data.statut_id')) {
                 $data->statut_id = $req['data']['statut_id'];

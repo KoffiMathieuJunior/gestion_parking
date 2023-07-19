@@ -5,6 +5,7 @@ namespace App\Providers;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use App\Exceptions\SanctumExceptionHandler;
 // use Laravel\Passport\Passport;
 
 class AppServiceProvider extends ServiceProvider
@@ -18,7 +19,11 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         // Passport::ignoreRoutes();
-        Sanctum::ignoreMigrations();
+        // Sanctum::ignoreMigrations();
+        $this->app->bind(
+            \Illuminate\Contracts\Debug\ExceptionHandler::class,
+            SanctumExceptionHandler::class
+        );
     }
 
     /**

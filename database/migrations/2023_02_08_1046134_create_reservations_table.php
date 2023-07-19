@@ -15,14 +15,19 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
-            $table->string('date_reservation');
-            $table->bigInteger('place_stationnement_id')->unsigned();
+            $table->string('code');
+            $table->bigInteger('place_id')->unsigned();
+            $table->bigInteger('parkings_id')->unsigned()->nullable();
             // $table->foreign('place_stationnement_id')->references('id')->on('place_stationnement');
-            $table->string('duree_reservation');
-            $table->bigInteger('formule_id')->unsigned();
+            // $table->string('duree_reservation');
+            $table->bigInteger('formule_id')->unsigned()->nullable();
+            $table->enum('statut',['waiting', 'cancel', 'new', 'finished', 'validate']);
+            // $table->bigInteger('statut_id')->unsigned();
             // $table->foreign('formule_id')->references('id')->on('formule');
-            $table->string('heure_arrive');
-            $table->string('heure_depart');
+            $table->date('date_depart');
+            $table->time('heure_depart')->format('H:i');
+            $table->date('date_arrive')->nullable();
+            $table->time('heure_arrive')->format('H:i')->nullable();
             $table->bigInteger('client_id')->unsigned();
             // $table->foreign('client_id')->references('id')->on('user');
 

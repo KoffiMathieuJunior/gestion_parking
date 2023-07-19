@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\API\Parametres;
 
-use App\Http\Controllers\API\BaseController;
 use Illuminate\Http\Request;
+use App\Models\type_abonnement;
 use App\Http\Controllers\Controller;
-use App\Models\Ville;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\API\BaseController;
 
-class VillesController extends BaseController
+class TypeAbonnementController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -19,15 +19,11 @@ class VillesController extends BaseController
     {
         //
         $req = $request->all();
-        // dd($req);
-        $query = Ville::join('pays', 'ville.pays_id', '=', 'pays.id')
-            ->select('ville.id as id', 'ville.libelle as libelle', 'pays.libelle as pays_libelle', 'language', 'indicatif');
-        
+        $query = type_abonnement::query();
         if($request->has('data')){
-            if ($request->has('data.pays_id')) {
-                $query->where('pays_id', $req['data']['pays_id']);
+            if ($request->has('data.code')) {
+                $query->where('code', 'LIKE', '%' . $req['data']['code'] . '%');
             }
-
             if ($request->has('data.libelle')) {
                 $query->where('libelle', 'LIKE', '%' . $req['data']['libelle'] . '%');
             }
@@ -57,30 +53,16 @@ class VillesController extends BaseController
     public function store(Request $request)
     {
         //
-        /* 
-        return Destination::addSelect(['last_flight' => Flight::select('name')
-                    ->whereColumn('destination_id', 'destinations.id')
-                    ->orderByDesc('arrived_at')
-                    ->limit(1)
-                ])->get();
-        */
-        $messages = [
-            'data.libelle.required' => 'Le libelle est requis.',
-            'data.pays_id.required' => 'Le pays indiqué n\'est pas valide.',
-            'data.pays_id.integer' => 'Le pays indiqué doit être un entier.',
-            'data.pays_id.exists' => 'Le pays indiqué sélectionnée n\'est pas valide.',
-        ];
         $req = $request->all();
         $validator = Validator::make($req, [
             'data' => 'required|array',
-            'data.pays_id' => 'required|integer|exists:App\Models\Pays,id',
-            // 'data.libelle' => 'required|unique:ville|string',
+            'data.code' => 'required|string',
             'data.libelle' => 'required|string',
-        ], $messages);
+        ]);
         // dd($validator->passes());
         if($validator->passes()){
-            $data = new Ville([
-                'pays_id' => $req['data']['pays_id'],
+            $data = new type_abonnement([
+                'code' => $req['data']['code'],
                 'libelle' => $req['data']['libelle'],
             ]);
             $data->save();
@@ -111,26 +93,19 @@ class VillesController extends BaseController
     public function update(Request $request)
     {
         //
-        $messages = [
-            'data.id.required' => 'Id non renseigné.',
-            'data.libelle.required' => 'Le libelle est requis.',
-            'data.pays_id.required' => 'Le pays indiqué n\'est pas valide.',
-            'data.pays_id.integer' => 'Le pays indiqué doit être un entier.',
-            'data.pays_id.exists' => 'Le pays indiqué sélectionnée n\'est pas valide.',
-        ];
         $req = $request->all();
         // echo "Before Validator::make<br>";
         $validator = Validator::make($req, [
             'data' => 'required|array',
             'data.id' => 'required',
-            'data.pays_id' => 'required|integer|exists:App\Models\Pays,id',
+            'data.code' => 'required|string',
             'data.libelle' => 'required|string'
-        ], $messages);
-        // dd($req);
+        ]);
+        
         if($validator->passes()){
-            $data = Ville::findOrFail($req['data']['id']);
+            $data = type_abonnement::findOrFail($req['data']['id']);
             $data->id = $req['data']['id'];
-            $data->pays_id = $req['data']['pays_id'];
+            $data->code = $req['data']['code'];
             $data->libelle = $req['data']['libelle'];
             $data->update();
             $data->save();
@@ -151,12 +126,12 @@ class VillesController extends BaseController
     {
         //
         $req = $request->all();
-        $data = Ville::findOrFail($req['data']['id']);
+        $data = type_abonnement::findOrFail($req['data']['id']);
         if(!$data->fails()){
             $data->delete();
             return $this->sendResponse($data, 'Opération effectuée avec succès.');
         } else {
-            return $this->sendError($data->errors()->all(), 'Operation echouée');
+            return $this->sendError('Id introuvable', 'Operation echouée');
         }
     }
 }

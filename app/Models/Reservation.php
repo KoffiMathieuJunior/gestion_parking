@@ -10,7 +10,17 @@ class Reservation extends Model
     use HasFactory;
     
     protected $fillable = [
-        'date_reservation', 'place_stationnement_id', 'duree_reservation','formule_id', 'heure_arrive', 'heure_depart',  'client_id', 'mode_paiement_id'
+        'code', 
+        'place_id', 
+        'formule_id', 
+        'parkings_id', 
+        'statut', 
+        'date_depart', 
+        'heure_depart',  
+        'heure_arrive', 
+        'date_arrive', 
+        'client_id', 
+        'mode_paiement_id'
     ];
     protected $primaryKey = 'id';
 }

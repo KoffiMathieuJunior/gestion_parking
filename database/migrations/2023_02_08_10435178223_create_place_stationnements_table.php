@@ -22,7 +22,7 @@ return new class extends Migration
             $table->bigInteger('type_vehicule_id')->unsigned();
             // $table->foreign('type_vehicule_id')->references('id')->on('type_vehicule');
             $table->bigInteger('niveaux_id')->unsigned();
-            $table->integer('cout')->unsigned();
+            $table->integer('tarif')->unsigned()->nullable();
             // $table->foreign('parking_id')->references('id')->on('parking');
             // $table->bigInteger('capteur_id')->unsigned();
             $table->bigInteger('statut_id')->unsigned();

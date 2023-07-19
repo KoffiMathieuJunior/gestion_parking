@@ -21,14 +21,21 @@ class AbonnementController extends BaseController
         // $abonnement = Abonnement::paginate(10);
         $req = $request->all();
         $query = Abonnement::join('users', 'client_id', '=', 'users.id')
-                            ->select('abonnements.id as id', 'abonnements.libelle as libelle', 'abonnements.code as code', 'date_debut', 'date_fin');
+                            ->join('place_stationnements', 'place_stationnements_id', '=', 'place_stationnements.id')
+                            ->join('statuts', 'place_stationnements.statut_id', '=', 'statuts.id')
+                            ->select('abonnements.id as id', 'abonnements.libelle as libelle', 'abonnements.code as code', 
+                            'date_debut', 'date_fin', 'place_stationnements.libelle as place_libelle', 'statuts.libelle as place_statut_libelle');
         if($request->has('data')){
             if ($request->has('data.client_id')) {
-                $query->where('client_id',  $req['data']['client_id']);
+                $query->where('client_id', $req['data']['client_id']);
             }
             
             if ($request->has('data.place_stationnements_id')) {
                 $query->where('place_stationnements_id', $req['data']['place_stationnements_id']);
+            }
+            
+            if ($request->has('data.type_abonnement_id')) {
+                $query->where('type_abonnement_id', $req['data']['type_abonnement_id']);
             }
 
             if ($request->has('data.libelle')) {
@@ -86,6 +93,7 @@ class AbonnementController extends BaseController
             'data.libelle' => 'required|string',
             'data.client_id' => 'required|integer|exists:App\Models\User,id',
             'data.place_stationnements_id' => 'required|integer|exists:App\Models\Place_Stationnement,id',
+            'data.type_abonnement_id' => 'required|integer|exists:App\Models\type_abonnement,id',
             'data.date_debut' => 'required|date_format:d/m/Y',
             'data.date_fin' => 'required|date_format:d/m/Y',
             'data.statut' => 'required|string',
@@ -98,7 +106,8 @@ class AbonnementController extends BaseController
                 'code' => $req['data']['code'],
                 'libelle' =>  $req['data']['libelle'],
                 'client_id' =>  $req['data']['client_id'],
-                'place_stationnements_id' =>  $req['data']['client_id'],
+                'place_stationnements_id' =>  $req['data']['place_stationnements_id'],
+                'type_abonnement_id' =>  $req['data']['type_abonnement_id'],
                 'date_debut' => $req['data']['date_debut'],
                 'date_fin' => $req['data']['date_fin'],
                 'statut' => $req['data']['statut'],
@@ -143,6 +152,7 @@ class AbonnementController extends BaseController
             'data.libelle' => 'required|string',
             'data.client_id' => 'required|string',
             'data.place_stationnements_id' => 'required|string',
+            'data.type_abonnement_id' => 'required|string',
             'data.date_debut' => 'required|date_format:d/m/Y',
             'data.date_fin' => 'required|date_format:d/m/Y',
             'data.statut' => 'required|string',
@@ -156,6 +166,7 @@ class AbonnementController extends BaseController
             $abonnement->libelle = $req['data']['libelle'];
             $abonnement->client_id = $req['data']['client_id'];
             $abonnement->place_stationnements_id = $req['data']['place_stationnements_id'];
+            $abonnement->type_abonnement_id = $req['data']['type_abonnement_id'];
             $abonnement->date_debut = $req['data']['date_debut'];
             $abonnement->date_fin = $req['data']['date_fin'];
             $abonnement->statut = $req['data']['statut'];

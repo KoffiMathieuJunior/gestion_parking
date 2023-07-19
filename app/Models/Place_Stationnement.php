@@ -10,7 +10,7 @@ class Place_Stationnement extends Model
     use HasFactory;
 
     protected $fillable = [
-        'libelle', 'espace', 'numero', 'type_vehicule_id', 'niveaux_id', 'capteur_id', 'abonnement_id', 'statut_id'
+        'libelle', 'espace', 'numero', 'type_vehicule_id', 'niveaux_id', 'capteur_id', 'abonnement_id', 'tarif', 'statut_id'
     ];
     protected $casts = [
         'espace' => 'array',

@@ -37,7 +37,8 @@ class PlaceStationnementController extends BaseController
                 ->join('parkings', 'niveaux.parking_id', '=', 'parkings.id')
                 ->select('place_stationnements.id as id', 'place_stationnements.libelle as libelle', 'place_stationnements.numero as numero',
                   /*'capteur_id',*/ 'place_stationnements.niveaux_id as niveaux_id', 'place_stationnements.statut_id as statut_id',
-                  'statuts.libelle as statuts_libelle','parkings.libelle as parking_libelle', 'parkings.id as parking_id',
+                   'niveaux.numero as niveaux_numero', 'statuts.libelle as statut_libelle',
+                  'statuts.libelle as statuts_libelle','parkings.libelle as parking_libelle', 'parkings.id as parking_id', 'tarif', 'latitude', 'longitude',
                   'type_vehicules.libelle as type_vehicule_libelle', 'place_stationnements.espace as espace_geojson', 'place_stationnements.type_vehicule_id');
         $req = $request->all();
         // dd($request->has('data'));
@@ -48,6 +49,10 @@ class PlaceStationnementController extends BaseController
             
             if ($request->has('data.numero')) {
                 $query->where('place_stationnements.numero', 'LIKE', '%' . $req['data']['numero'] . '%');
+            }
+            
+            if ($request->has('data.tarif')) {
+                $query->where('tarif', 'LIKE', '%' . $req['data']['tarif'] . '%');
             }
 
             if ($request->has('data.espace')) {
@@ -102,6 +107,7 @@ class PlaceStationnementController extends BaseController
         $messages = [
             'data.libelle.required' => 'Le libelle est requis.',
             'data.numero.required' => 'Le numero est requis.',
+            'data.tarif.required' => 'Le numero est requis.',
             'data.espace.required' => 'L\'espace sont requis et doivent être séparés par des virgules.',
             // 'data.espace.regex' => 'Mauvais formatage des coordonnés',
             'data.niveaux_id.required' => 'Le niveau est requis.',
@@ -123,6 +129,7 @@ class PlaceStationnementController extends BaseController
             'data' => 'required|array',
             'data.libelle' => 'required|string',
             'data.numero' => 'required|integer',
+            'data.tarif' => 'required|integer',
             'data.espace' => 'required|json',
             // 'data.espace' => 'required|json|regex:/^\{"type":"Polygon","coordinates":\[\[\[-?\d+(\.\d+)?,-?\d+(\.\d+)?\],?\]\]+\}$/',
             // 'data.espace' => ['required', 'geojson', new Polygon],
@@ -152,6 +159,7 @@ class PlaceStationnementController extends BaseController
             $data = new Place_Stationnement([
                 'libelle' => $req['data']['libelle'],
                 'numero' => $req['data']['numero'],
+                'tarif' => $req['data']['tarif'],
                 'espace' => $req['data']['espace'],
                 // 'espace' => $espace,
                 'type_vehicule_id' => $req['data']['type_vehicule_id'],
@@ -185,12 +193,13 @@ class PlaceStationnementController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         //
         $messages = [
             'data.libelle.required' => 'Le libelle est requis.',
             'data.numero.required' => 'Le numero est requis.',
+            'data.tarif.required' => 'Le tarif est requis.',
             'data.espace.required' => 'L\'espace est requis',
             'data.espace.json' => 'L\'espace doit etre une chaine de json',
             'data.niveaux_id.required' => 'Le niveau est requis.',
@@ -213,6 +222,7 @@ class PlaceStationnementController extends BaseController
             'data.id' => 'required',
             'data.libelle' => 'required|string',
             'data.numero' => 'required|integer',
+            'data.tarif' => 'required|integer',
             'data.espace' => 'json',
             // 'data.espace' => [
             //     'required',
@@ -230,6 +240,7 @@ class PlaceStationnementController extends BaseController
             $data->id = $req['data']['id'];
             $data->libelle = $req['data']['libelle'];
             $data->numero = $req['data']['numero'];
+            $data->tarif = $req['data']['tarif'];
             $data->espace = $req['data']['espace'];
             // $data->abonnement_id = $req['data']['abonnement_id'];
             // $data->capteur_id = $req['data']['capteur_id'];

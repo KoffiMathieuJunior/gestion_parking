@@ -3,9 +3,13 @@
 namespace App\Exceptions;
 
 use Throwable;
+use Psr\Log\LogLevel;
+use App\Exceptions\SanctumExceptionHandler;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Session\TokenMismatchException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -72,6 +76,20 @@ class Handler extends ExceptionHandler
         if ($exception instanceof TokenMismatchException) {
             return response()->json(['message' => 'Invalid token. Please authenticate.'], 401);
         }
+
+        if ($exception instanceof ModelNotFoundException || $exception instanceof NotFoundHttpException) {
+            return response()->json([
+                'error' => 'Not Found',
+                'message' => 'Aucun élément trouvé',
+            ], 404);
+        }
+
+        if ($exception instanceof AuthenticationException) {
+            return (new SanctumExceptionHandler)->unauthenticated($request, $exception);
+        }
+        // if ($exception instanceof AuthenticationException) {
+        //     return (new \App\Exceptions\SanctumExceptionHandler)->unauthenticated($request, $exception);
+        // }
 
         return parent::render($request, $exception);
     }

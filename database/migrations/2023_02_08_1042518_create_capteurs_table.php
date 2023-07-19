@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->text('libelle');
             $table->text('etat');
-            $table->bigInteger('niveaux_id')->unsigned();
+            $table->bigInteger('place_id')->unsigned();
             $table->bigInteger('statut_id')->unsigned();
             // $table->foreign('statut_id')->references('id')->on('statut');
             $table->bigInteger('gateway_id')->unsigned();

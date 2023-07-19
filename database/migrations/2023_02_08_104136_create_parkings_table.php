@@ -20,8 +20,8 @@ return new class extends Migration
             $table->decimal('longitude', 19, 16);
             // $table->decimal('longitude', 10, 20)->change();
             $table->string('adresse');
-            $table->time('heure_ouverture')->nullable();
-            $table->time('heure_fermeture')->nullable();    
+            $table->time('heure_ouverture')->format('H:i')->nullable();
+            $table->time('heure_fermeture')->format('H:i')->nullable();    
             $table->string('jours');    
             // $table->bigInteger('compagnie_id')->unsigned();
             $table->bigInteger('ville_id')->unsigned();
