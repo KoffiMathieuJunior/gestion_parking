@@ -159,7 +159,4 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/update', [ReservationsController::class, 'update']);
         Route::post('/delete', [ReservationsController::class, 'destroy']);
     });
-
-
 });
-

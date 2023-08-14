@@ -50,16 +50,16 @@ Route::middleware('auth')->group(function () {
 
 
 Route::resource('vehicule', VehiculeController::class);
-Route::resource('compagnie', CompagnieController::class);
 Route::resource('type_vehicule', Type_VehiculeController::class);
 Route::resource('Abonnement', AbonnementController::class);
-Route::resource('client', ClientController::class);
 Route::resource('gateway', GatewayController::class);
 Route::resource('parking', ParkingController::class);
 Route::resource('statut', StatutController::class);
 Route::resource('place_stationnement', Place_StationnementController::class);
 Route::resource('Mode_Paiement', Mode_PaiementController::class);
 Route::resource('role', RoleController::class);
+Route::resource('client', ClientController::class);
+Route::resource('compagnie', CompagnieController::class);
 Route::resource('type_proprietaire', Type_ProprietaireController::class);
 
 Route::controller(ClientController::class)->group(function () {
@@ -68,7 +68,6 @@ Route::controller(ClientController::class)->group(function () {
     Route::get('/client/create', 'create');
     Route::get('/client/{id}', 'show');
     Route::get('/client/{id}/edit', 'edit');
-
 
     Route::post('/client', 'store');
     Route::patch('/client/{id}', 'update');
@@ -84,7 +83,6 @@ Route::controller(StatutController::class)->group(function () {
     Route::get('/statut/{id}', 'show');
     Route::get('/statut/{id}/edit', 'edit');
 
-
     Route::post('/statut', 'store');
     Route::patch('/statut/{id}', 'update');
     Route::delete('/statut/{id}', 'destroy');
@@ -98,13 +96,11 @@ Route::controller(Type_VehiculeController::class)->group(function () {
     Route::get('/type_vehicule/{id}', 'show');
     Route::get('/type_vehicule/{id}/edit', 'edit');
 
-
     Route::post('/type_vehicule', 'store');
     Route::patch('/type_vehicule/{id}', 'update');
     Route::delete('/type_vehicule/{id}', 'destroy');
     Route::post('/type_vehicule/create', 'create');
 });
-
 
 Route::controller(AbonnementController::class)->group(function () {
 
@@ -112,7 +108,6 @@ Route::controller(AbonnementController::class)->group(function () {
     Route::get('/abonnement/create', 'create');
     Route::get('/abonnement/{id}', 'show');
     Route::get('/abonnement/{id}/edit', 'edit');
-
 
     Route::post('/abonnement', 'store');
     Route::patch('/abonnement/{id}', 'update');
@@ -127,13 +122,11 @@ Route::controller(ActionController::class)->group(function () {
     Route::get('/action/{id}', 'show');
     Route::get('/action/{id}/edit', 'edit');
 
-
     Route::post('/action', 'store');
     Route::patch('/action/{id}', 'update');
     Route::delete('/action/{id}', 'destroy');
     Route::post('/action/create', 'create');
 });
-
 
 Route::controller(CapteurController::class)->group(function () {
 
@@ -142,13 +135,11 @@ Route::controller(CapteurController::class)->group(function () {
     Route::get('/capteur/{id}', 'show');
     Route::get('/capteur/{id}/edit', 'edit');
 
-
     Route::post('/capteur', 'store');
     Route::patch('/capteur/{id}', 'update');
     Route::delete('/capteur/{id}', 'destroy');
     Route::post('/capteur/create', 'create');
 });
-
 
 Route::controller(CompagnieController::class)->group(function () {
 
@@ -156,7 +147,6 @@ Route::controller(CompagnieController::class)->group(function () {
     Route::get('/compagnie/create', 'create');
     Route::get('/compagnie/{id}', 'show');
     Route::get('/compagnie/{id}/edit', 'edit');
-
 
     Route::post('/compagnie', 'store');
     Route::patch('/compagnie/{id}', 'update');
@@ -171,7 +161,6 @@ Route::controller(FormuleController::class)->group(function () {
     Route::get('/formule/{id}', 'show');
     Route::get('/formule/{id}/edit', 'edit');
 
-
     Route::post('/formule', 'store');
     Route::patch('/formule/{id}', 'update');
     Route::delete('/formule/{id}', 'destroy');
@@ -184,7 +173,6 @@ Route::controller(GatewayController::class)->group(function () {
     Route::get('/gateway/create', 'create');
     Route::get('/gateway/{id}', 'show');
     Route::get('/gateway/{id}/edit', 'edit');
-
 
     Route::post('/gateway', 'store');
     Route::patch('/gateway/{id}', 'update');
@@ -199,13 +187,11 @@ Route::controller(Mode_PaiementController::class)->group(function () {
     Route::get('/mode_paiement/{id}', 'show');
     Route::get('/mode_paiement/{id}/edit', 'edit');
 
-
     Route::post('/mode_paiement', 'store');
     Route::patch('/mode_paiement/{id}', 'update');
     Route::delete('/mode_paiement/{id}', 'destroy');
     Route::post('/mode_paiement/create', 'create');
 });
-
 
 Route::controller(NiveauController::class)->group(function () {
 
@@ -214,13 +200,11 @@ Route::controller(NiveauController::class)->group(function () {
     Route::get('/niveau/{id}', 'show');
     Route::get('/niveau/{id}/edit', 'edit');
 
-
     Route::post('/niveau', 'store');
     Route::patch('/niveau/{id}', 'update');
     Route::delete('/niveau/{id}', 'destroy');
     Route::post('/niveau/create', 'create');
 });
-
 
 Route::controller(ParkingController::class)->group(function () {
 
@@ -229,13 +213,11 @@ Route::controller(ParkingController::class)->group(function () {
     Route::get('/parking/{id}', 'show');
     Route::get('/parking/{id}/edit', 'edit');
 
-
     Route::post('/parking', 'store');
     Route::patch('/parking/{id}', 'update');
     Route::delete('/parking/{id}', 'destroy');
     Route::post('/parking/create', 'create');
 });
-
 
 Route::controller(Place_StationnementController::class)->group(function () {
 
@@ -244,14 +226,11 @@ Route::controller(Place_StationnementController::class)->group(function () {
     Route::get('/palce_stationnement/{id}', 'show');
     Route::get('/palce_stationnement/{id}/edit', 'edit');
 
-
     Route::post('/palce_stationnement', 'store');
     Route::patch('/palce_stationnement/{id}', 'update');
     Route::delete('/palce_stationnement/{id}', 'destroy');
     Route::post('/palce_stationnement/create', 'create');
 });
-
-
 
 Route::controller(ProprietaireController::class)->group(function () {
 
@@ -260,14 +239,11 @@ Route::controller(ProprietaireController::class)->group(function () {
     Route::get('/proprietaire/{id}', 'show');
     Route::get('/proprietaire/{id}/edit', 'edit');
 
-
     Route::post('/proprietaire', 'store');
     Route::patch('/proprietaire/{id}', 'update');
     Route::delete('/proprietaire/{id}', 'destroy');
     Route::post('/proprietaire/create', 'create');
 });
-
-
 
 Route::controller(ReservationController::class)->group(function () {
 
@@ -276,13 +252,11 @@ Route::controller(ReservationController::class)->group(function () {
     Route::get('/reservation/{id}', 'show');
     Route::get('/reservation/{id}/edit', 'edit');
 
-
     Route::post('/reservation', 'store');
     Route::patch('/reservation/{id}', 'update');
     Route::delete('/reservation/{id}', 'destroy');
     Route::post('/reservation/create', 'create');
 });
-
 
 Route::controller(Role_ActionController::class)->group(function () {
 
@@ -291,13 +265,11 @@ Route::controller(Role_ActionController::class)->group(function () {
     Route::get('/role_action/{id}', 'show');
     Route::get('/role_action/{id}/edit', 'edit');
 
-
     Route::post('/role_action', 'store');
     Route::patch('/role_action/{id}', 'update');
     Route::delete('/role_action/{id}', 'destroy');
     Route::post('/role_action/create', 'create');
 });
-
 
 Route::controller(Type_ProprietaireController::class)->group(function () {
 
@@ -306,13 +278,11 @@ Route::controller(Type_ProprietaireController::class)->group(function () {
     Route::get('/type_proprietaire/{id}', 'show');
     Route::get('/type_proprietaire/{id}/edit', 'edit');
 
-
     Route::post('/type_proprietaire', 'store');
     Route::patch('/type_proprietaire/{id}', 'update');
     Route::delete('/type_proprietaire/{id}', 'destroy');
     Route::post('/type_proprietaire/create', 'create');
 });
-
 
 Route::controller(VehiculeController::class)->group(function () {
 
@@ -320,7 +290,6 @@ Route::controller(VehiculeController::class)->group(function () {
     Route::get('/vehicule/create', 'create');
     Route::get('/vehicule/{id}', 'show');
     Route::get('/vehicule/{id}/edit', 'edit');
-
 
     Route::post('/vehicule', 'store');
     Route::patch('/vehicule/{id}', 'update');
@@ -335,13 +304,11 @@ Route::controller(RoleController::class)->group(function () {
     Route::get('/role/{id}', 'show');
     Route::get('/role/{id}/edit', 'edit');
 
-
     Route::post('/role', 'store');
     Route::patch('/role/{id}', 'update');
     Route::delete('/role/{id}', 'destroy');
     Route::post('/role/create', 'create');
 });
-
 
 Route::controller(Type_ProprietaireController::class)->group(function () {
 
@@ -349,7 +316,6 @@ Route::controller(Type_ProprietaireController::class)->group(function () {
     Route::get('/type_proprietaire/create', 'create');
     Route::get('/type_proprietaire/{id}', 'show');
     Route::get('/type_proprietaire/{id}/edit', 'edit');
-
 
     Route::post('/type_proprietaire', 'store');
     Route::patch('/type_proprietaire/{id}', 'update');
@@ -364,7 +330,6 @@ Route::controller(Type_UserController::class)->group(function () {
     Route::get('/type_user/{id}', 'show');
     Route::get('/type_user/{id}/edit', 'edit');
 
-
     Route::post('/type_user', 'store');
     Route::patch('/type_user/{id}', 'update');
     Route::delete('/type_user/{id}', 'destroy');
@@ -378,9 +343,15 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/user/{id}', 'show');
     Route::get('/user/{id}/edit', 'edit');
 
-
     Route::post('/user', 'store');
     Route::patch('/user/{id}', 'update');
     Route::delete('/user/{id}', 'destroy');
     Route::post('/user/create', 'create');
 });
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
